@@ -4,6 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Send Message</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+        }
+        .popup p {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
     <h2>Send Anonymous Message</h2>
@@ -13,18 +35,29 @@
         <button type="submit">Send</button>
     </form>
 
+    <div class="popup" id="successPopup">
+        <p>Message sent successfully!</p>
+    </div>
+
     <script>
         document.getElementById('messageForm').addEventListener('submit', function(event) {
             event.preventDefault();
             var message = document.getElementById('message').value;
-            // Kirim pesan ke pesan.html
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    alert('Message sent successfully!');
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        document.getElementById('successPopup').style.display = 'block';
+                        setTimeout(function() {
+                            document.getElementById('successPopup').style.display = 'none';
+                        }, 3000); // Popup akan hilang setelah 3 detik
+                    } else {
+                        alert('Failed to send message. Please try again later.');
+                    }
                 }
             };
-            xhttp.open("POST", "pesan.html", true);
+            // Kirim pesan ke pesan.html
+            xhttp.open("POST", "https://lexiiz3417.github.io/pesan.html", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send("message=" + message);
         });
