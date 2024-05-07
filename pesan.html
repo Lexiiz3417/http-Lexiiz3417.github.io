@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+</head>
+<body>
+    <h2>Messages</h2>
+    <div id="messages">
+        <!-- Messages will be displayed here -->
+    </div>
+
+    <h2>Delete Messages</h2>
+    <form id="deleteForm">
+        <label for="pin">Enter PIN:</label><br>
+        <input type="password" id="pin" name="pin"><br>
+        <button type="submit">Delete Messages</button>
+    </form>
+
+    <script>
+        document.getElementById('deleteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var pin = document.getElementById('pin').value;
+            if (pin === "341777") {
+                // Hapus pesan
+                document.getElementById('messages').innerHTML = "";
+                alert('Messages deleted successfully!');
+            } else {
+                alert('Incorrect PIN!');
+            }
+        });
+    </script>
+</body>
+</html>
