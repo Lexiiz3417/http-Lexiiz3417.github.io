@@ -81,17 +81,17 @@
                 }
             };
             
-            // Hapus pesan langsung dari array messages di sisi klien
-            var messages;
+            // Mengambil pesan dari messages.json
             xhttp.open("GET", "messages.json", true);
             xhttp.onload = function() {
-                messages = JSON.parse(xhttp.responseText);
+                var messages = JSON.parse(xhttp.responseText);
+                // Hapus pesan dengan indeks yang diberikan
                 messages.splice(index, 1);
-                var updatedMessages = JSON.stringify(messages);
+                // Simpan kembali pesan ke messages.json
                 var xhr = new XMLHttpRequest();
                 xhr.open("PUT", "messages.json", true);
                 xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.send(updatedMessages);
+                xhr.send(JSON.stringify(messages));
             }
             xhttp.send();
         }
