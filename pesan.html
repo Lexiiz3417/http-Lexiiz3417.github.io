@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .message {
+            border: 1px solid white;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <h2>Messages</h2>
@@ -11,25 +31,58 @@
         <!-- Messages will be displayed here -->
     </div>
 
-    <h2>Delete Messages</h2>
-    <form id="deleteForm">
-        <label for="pin">Enter PIN:</label><br>
-        <input type="password" id="pin" name="pin"><br>
-        <button type="submit">Delete Messages</button>
-    </form>
-
     <script>
-        document.getElementById('deleteForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var pin = document.getElementById('pin').value;
-            if (pin === "341777") {
-                // Hapus pesan
-                document.getElementById('messages').innerHTML = "";
-                alert('Messages deleted successfully!');
-            } else {
-                alert('Incorrect PIN!');
-            }
-        });
+        // Fungsi untuk memuat pesan yang tersimpan saat halaman dimuat
+        window.onload = function() {
+            loadMessages();
+        };
+
+        // Fungsi untuk memuat pesan yang tersimpan
+        function loadMessages() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var messages = JSON.parse(this.responseText);
+                    displayMessages(messages);
+                }
+            };
+            xhttp.open("GET", "messages.json", true);
+            xhttp.send();
+        }
+
+        // Fungsi untuk menampilkan pesan
+        function displayMessages(messages) {
+            var messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = ""; // Bersihkan kontainer pesan sebelum menampilkan yang baru
+            messages.forEach(function(message, index) {
+                var messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.textContent = message;
+
+                // Tambahkan tombol hapus
+                var deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', function() {
+                    deleteMessage(index);
+                });
+
+                messageDiv.appendChild(deleteBtn);
+                messagesContainer.appendChild(messageDiv);
+            });
+        }
+
+        // Fungsi untuk menghapus pesan
+        function deleteMessage(index) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    loadMessages(); // Memuat ulang pesan setelah menghapus
+                }
+            };
+            xhttp.open("DELETE", "delete_message.php?index=" + index, true);
+            xhttp.send();
+        }
     </script>
 </body>
 </html>
